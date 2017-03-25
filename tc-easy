@@ -37,13 +37,9 @@ elsif (!$bw && ($lt || $jt)) {
     push @cmds, "tc qdisc add dev $if root netem delay $lt $jt";
 }
 elsif ($bw && ($lt || $jt)) {
-    push @cmds, "tc qdisc add dev $if root handle 1:0 cbq avpkt 1000 bandwidth 10kbit";
-    push @cmds,
-        "tc class add dev $if parent 1:0 classid 1:1 "
-        . "cbq rate $bw allot 1500 prio 5 bounded isolated"
-        if $bw;
-    push @cmds, "tc qdisc add dev $if parent 1:1 netem delay $lt $jt"
-        if $lt || $jt;
+    push @cmds, "tc qdisc add dev $if handle 1:0 root htb default 1";
+    push @cmds, "tc class add dev $if parent 1:0 classid 1:1 htb rate $bw";
+    push @cmds, "tc qdisc add dev $if parent 1:1 handle  2:0 netem delay $lt $jt";
 }
 if ($opts->{verbose}) {
     print join("\n  ", ("Commands:", @cmds));
