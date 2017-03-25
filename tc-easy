@@ -92,7 +92,7 @@ If interface is omitted, the first global scope interface is used.
 
  Examples:
    tc-easy                  # with nothing, clears traffic shaping
-   tc-easy 500kbps          # Bandwidth limited to 550,000 bits-per-second
+   tc-easy 550kbit          # Bandwidth limited to 550,000 bits-per-second
    tc-easy 0 350ms 10ms     # Latency set to 350msec with 10msec jitter
    tc-easy 1Mbps 0 0 eth3   # Bandwith to 1M bits-per-seconds on eth3
 
@@ -100,6 +100,10 @@ If interface is omitted, the first global scope interface is used.
 
 This script wraps the Linux 'tc' command to do a few easy things;
 namely limit the bandwidth, latency, and jitter on an interface.
+
+Note: To show existing settings, use the 'tc' command as is like so:
+
+  tc -s qdisc ls dev $INTERFACE
 
 =head1 COPYRIGHT
 
