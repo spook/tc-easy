@@ -26,7 +26,17 @@ print "Interface $if\n" if $opts->{verbose};
 
 # Build the commands
 my @cmds = ("tc qdisc del dev $if root");
-if ($bw || $lt || $jt) {
+if ($bw && !$lt  && !$jt) {
+    # Bandwidth only
+    #   Note - the latency in the command is maximum for packet gathering,
+    #   not the latency we would want to add.
+    push @cmds, "tc qdisc add dev $if root tbf rate $bw latency 50ms burst 1540";
+}
+elsif (!$bw && ($lt || $jt)) {
+    # Latency/jitter only, no bandwidth limits
+    push @cmds, "tc qdisc add dev $if root netem delay $lt $jt";
+}
+elsif ($bw && ($lt || $jt)) {
     push @cmds, "tc qdisc add dev $if root handle 1:0 cbq avpkt 1000 bandwidth 10kbit";
     push @cmds,
         "tc class add dev $if parent 1:0 classid 1:1 "
