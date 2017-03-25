@@ -58,10 +58,10 @@ if ($opts->{test}) {
 die "*** Must be root\n" if $>;
 my $first = 1;
 foreach my $cmd (@cmds) {
-    my $ret = system($cmd);
-    next if $first && ($ret >> 8) == 2;    # 'qdisc del' will fail if nothing setup yet
-    die "*** Failed to invoke command: $!\n\t$cmd\n" if $ret < 0;
-    die "*** Command failed, xstat=" . ($ret >> 8) . "\n\t$cmd\n" if $ret;
+    my $out = qx($cmd 2>&1);
+    next if $first && ($? >> 8) == 2;    # 'qdisc del' will fail if nothing setup yet
+    die "*** Failed to invoke command: $!\n\t$cmd\n" if $? < 0;
+    die "*** Command failed, xstat=" . ($? >> 8) . "\n\t$cmd\n\t$out\n" if $?;
     $first = 0;
 }
 
@@ -94,7 +94,7 @@ If interface is omitted, the first global scope interface is used.
    tc-easy                  # with nothing, clears traffic shaping
    tc-easy 550kbit          # Bandwidth limited to 550,000 bits-per-second
    tc-easy 0 350ms 10ms     # Latency set to 350msec with 10msec jitter
-   tc-easy 1Mbps 0 0 eth3   # Bandwith to 1M bits-per-seconds on eth3
+   tc-easy 1Mbit 0 0 eth3   # Bandwith to 1M bits-per-seconds on eth3
 
 =head1 DESCRIPTION
 
