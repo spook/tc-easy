@@ -9,7 +9,8 @@ $| = 1;
 my $opts = {};
 GetOptions($opts, "help|h", "test|t", "verbose|v+") 
     or pod2usage(-verbose => 0);
-pod2usage(-verbose => 99, -sections => "NAME|SYNOPSIS|DESCRIPTION|COPYRIGHT")
+pod2usage(-verbose  => 99, 
+          -sections => "NAME|SYNOPSIS|DESCRIPTION")
     if $opts->{help};
 my $bw = $ARGV[0] || 0;
 my $lt = $ARGV[1] || 0;
@@ -92,6 +93,13 @@ If interface is omitted, the first global scope interface is used.
    tc-easy 0 350ms 10ms     # Latency set to 350msec with 10msec jitter
    tc-easy 1Mbit 0 0 eth3   # Bandwith to 1M bits-per-seconds on eth3
 
+ Units:
+   For Bandwidth
+     kbps is really kilo "Bytes" per second
+     kbit is really kilo "bits" per second
+     mbps and mbit, gbps and gbit are similar.
+   For latency and jitter, use 'ms' for milliseconds i.e. 13ms
+
 =head1 DESCRIPTION
 
 This script wraps the Linux 'tc' command to do a few easy things;
@@ -99,7 +107,7 @@ namely limit the bandwidth, latency, and jitter on an interface.
 
 Note: To show existing settings, use the 'tc' command as is like so:
 
-  tc -s qdisc ls dev $INTERFACE
+  tc qdisc ls dev $INTERFACE
 
 =head1 COPYRIGHT
 
