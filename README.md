@@ -34,3 +34,6 @@ Enjoy!
          kbit is really kilo "bits" per second
          mbps and mbit, gbps and gbit are similar.
        For latency and jitter, use 'ms' for milliseconds i.e. 13ms
+
+## See Also
+* https://wiki.linuxfoundation.org/networking/netem
